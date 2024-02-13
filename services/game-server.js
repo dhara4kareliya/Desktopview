@@ -89,6 +89,8 @@ export async function getTs (token) {
 }
 
 export function join () {
+    window.clearTableCards();
+
     if (!userToken) {
         joinToTsWithMtData(mtData.user, mtData.table_token);
         return;

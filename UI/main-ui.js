@@ -226,7 +226,6 @@ export class MainUI {
         }
 
         for (const waitForBBCheckbox of waitForBBCheckboxes) {
-            toggleCheckbox(waitForBBCheckbox, true);
             waitForBBCheckbox.addEventListener('change', () => { waitForBB(waitForBBCheckbox.checked) });
         }
         for (const sitOutNextHandCheckbox of sitOutNextHandCheckboxes) {
@@ -846,6 +845,7 @@ export class MainUI {
             }
         }
 
+        $('#msgModal #myModalLabel')[0].innerText = (data.labelText !== undefined ) ? data.labelText : "Error Message";
         $('.error-message')[0].innerHTML = msg;
         $('#msgModal').modal('show');
     }
@@ -869,6 +869,15 @@ export class MainUI {
         }
 
         $('#tournamentRank')[0].innerText = rank;
+
+        if (/^[1]$/.test(rank)) {
+            $('#tournament_place')[0].innerText = 'st';
+        } else if(/^[2]$/.test(rank)) {
+            $('#tournament_place')[0].innerText = 'nd';
+        } else if(/^[3]$/.test(rank)) {
+            $('#tournament_place')[0].innerText = 'rd';
+        }
+        
         $('#tournamentPrize')[0].innerText = prize;
 
         $('#tournamentResultModal').modal('show');

@@ -18,8 +18,7 @@ const actionColors = {
     "MISSING SB": "#595959",
     "BB": "#595959",
     "SB": "#595959",
-    "SittingOut": "#595959",
-    "Waiting For BB": "#595959",
+    "Sitting Out": "#595959",
     "MUCKED": "#EC262F",
 };
 
@@ -81,7 +80,7 @@ function srcToken(element, value) {
         $(element).removeClass('shrink');
 }
 
-const playerWrapperHTML = `
+const playerWrapperHTML = `<div>
 <img class="avatar" src="./images/desktop/22 copy 7@2x.png">
 <div class="player-cards"></div>
 <div class = "betAnimation">
@@ -145,6 +144,7 @@ const playerWrapperHTML = `
                   </div>
             </div>
           </div>
+</div>
 `;
 
 const PlayerDetail = ` <div class="main-section">
@@ -266,6 +266,9 @@ export class Player {
         this.missingSB = false;
         this.mucked = false;
         this.isPlaying = false;
+        this.storedCards = [];
+
+
     }
 
     setPlayState(isPlaying) {
@@ -289,6 +292,51 @@ export class Player {
 
     setUsdRate(usd) {
         this.usdRate = usd;
+    }
+
+    storeFoldCards(visible, cards) {
+        $(this.wrapper).find('> div')[0].onclick = undefined;
+        if (visible == true) {
+            this.storedCards = cards;
+
+            $(this.wrapper).find('> div')[0].onclick = () => {
+                if ($(this.wrapper).find(".fold-cards").length !== 0) {
+                    $(this.wrapper).find(".fold-cards").remove();
+                } else {
+                    this.showFoldCards(this.storedCards);
+                }
+            };
+        } else {
+            this.storedCards = [];
+            if ($(this.wrapper).find(".fold-cards").length !== 0) {
+                $(this.wrapper).find(".fold-cards").remove();
+            }
+        }
+    }
+
+    showFoldCards(cards) {
+        if (cards == undefined) return;
+
+        $(this.wrapper).append('<div class="fold-cards"></div>');
+        let twoCardsClassName = "";
+        let fourCardsClassName = "";
+
+        if (cards.length == 2) twoCardsClassName = "two-cards";
+        if (cards.length == 4 || cards.length == 5) fourCardsClassName = "four-cards";
+
+        if (fourCardsClassName != "") {
+            $(this.wrapper).find('.fold-cards').addClass(fourCardsClassName);
+        }
+        for (let i = 0; i < cards.length; ++i) {
+            const card = cards[i].toLowerCase();
+            const cardImgFilePath = getCardImageFilePath(card);
+            const tableCard = `<div class="content ${twoCardsClassName}">
+                                    <img src="${cardImgFilePath}"/>
+                                </div>`;
+
+            $(this.wrapper).find('.fold-cards').append(tableCard)
+        }
+
     }
 
     setCards(cards) {
@@ -389,7 +437,7 @@ export class Player {
         }
 
         if (seat.state == 'SitOut') {
-            this.setWrapperField("lastAction", "SittingOut");
+            this.setWrapperField("lastAction", "Sitting Out");
         }
     }
 
@@ -550,7 +598,7 @@ export class Player {
     }
 
     setPlayerAvatar(avatar) {
-        this.setWrapperField("avatar_img", avatar);
+        this.setWrapperField("avatar", avatar);
     }
 
     setTotalCardMask() {
@@ -681,7 +729,7 @@ export class Player {
     }
 
     showWaitForBBLabel(value) {
-        this.setWrapperField("lastAction", value ? "Waiting For BB" : false);
+        this.setWrapperField("lastAction", value ? "Sitting Out" : false);
     }
 
     showSitDownButton(visible) {

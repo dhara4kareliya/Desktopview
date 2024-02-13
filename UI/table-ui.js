@@ -16,6 +16,7 @@ const AutoTipCheckboxes = $(".AutoTip .checkbox")[0];
 let prevState = "";
 let lastAnimationAction = "betAction";
 let lastBetPlayer = null;
+let tableCardsCount = 0;
 const sound = new Sound();
 
 export class Table {
@@ -32,7 +33,6 @@ export class Table {
         this.shift = 0;
         this.showSbBbButtons = false;
         this.siticonVisible = false;
-        this.tableCardsCount = 0;
         this.closeTable = false;
         this.numberOfSeats = 9;
         this.sixPlayerSeats = [0, 1, 3, 5, 6, 7];
@@ -229,11 +229,13 @@ export class Table {
                 player.setIsPlayer(getPlayerSeat() != -1 && getPlayerSeat() == i)
                 player.setPlayState(true);
                 player.setPlayerName(seat.player.name);
+                player.setPlayerAvatar(seat.player.avatar);
                 player.setPlayerMoney(seat.money);
                 player.setPlayerAction(seat.lastAction);
                 player.setAmountAnimation(false);
                 // player.setPlayerBet(seat.lastAction == "allin" ? seat.bet : seat.lastBet);
                 player.setPlayerBet(seat.lastBet);
+                player.storeFoldCards(getPlayerSeat() != -1 && getPlayerSeat() == i && seat.fold, seat.cards);
                 if (lastBetPlayer == i) {
                     var checkAction = seat.lastAction == "check" || seat.lastAction == "fold";
                     this.PlayerAnimation({ type: "betAction", animation: !checkAction, actionCheck: checkAction, data: { index: lastBetPlayer } });
@@ -321,9 +323,9 @@ export class Table {
 
         if (cards == undefined) return;
 
-        for (let i = this.tableCardsCount; i < cards.length; ++i) {
+        for (let i = tableCardsCount; i < cards.length; ++i) {
             const cardFilePath = getCardImageFilePath(cards[i]);
-            this.tableCardsCount = this.tableCardsCount + 1;
+            tableCardsCount = tableCardsCount + 1;
             setTimeout(() => {
                 const tableCard = `<div class="tableCard" value=${cards[i].toLowerCase()}>
                                     <img class="back" src="./images/png/102x142/back.png"/>
@@ -421,7 +423,7 @@ export class Table {
     showRoundResult(result) {
         const playerMap = result.players;
         let index = 0;
-        result.pots.forEach(pot => {
+        result.pots.forEach((pot, potIndex) => {
             const winners = pot.winners;
             const indexDesktop = sidePots.length / 2 + index;
             const indexMobile = index;
@@ -474,7 +476,8 @@ export class Table {
                         } else {
                             player.showWinnerHand(false);
                         }
-                        this.addLog(`${player.name} wins ${index === 1 ? 'main pot' : ('side pot ' + index)} of ${pot.prize} with ${data.hand ? data.hand.cards.join(' ') : ''}`)
+                        // this.addLog(`${player.name} wins ${index === 1 ? 'main pot' : ('side pot ' + index)} of ${pot.prize} with ${data.hand ? data.hand.cards.join(' ') : ''}`)
+                        this.addLog(`${player.name} wins: ${potIndex === 0 ? 'main pot' : ('side pot ' + potIndex)}, ${pot.prize} ${data.hand ? 'with ' + data.hand.rank : ''}`);
                     } else {
                         player.setTotalCardMask();
                     }
@@ -497,7 +500,7 @@ export class Table {
             this.players.forEach(player => {
                 player.HighlightCards();
                 player.showWinner(false);
-                this.clearTableCards();
+                clearTableCards();
                 player.clearPlayerAnimationCss();
                 prevState = "";
             });
@@ -534,11 +537,6 @@ export class Table {
                 card.classList.add("with_mask")
             }
         }
-    }
-
-    clearTableCards() {
-        $('.tableCards')[0].innerHTML = '';
-        this.tableCardsCount = 0;
     }
 
     clearTurn() {
@@ -587,6 +585,11 @@ export class Table {
     }
 }
 
+function clearTableCards() {
+    $('.tableCards')[0].innerHTML = '';
+    tableCardsCount = 0;
+}
+
 export const modes = Object.freeze({
     None: 0,
     Joining: 1,
@@ -607,3 +610,5 @@ export const playerStates = Object.freeze({
 export default {
     playerStates,
 }
+
+window.clearTableCards = clearTableCards;

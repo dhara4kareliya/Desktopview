@@ -70,30 +70,63 @@
     top: calc(6* var(--aspect-ratio));
     left: calc(3* var(--aspect-ratio));
 }
-.row1 .card2 {
+.fronts, .backs{
+    width: calc(4* var(--aspect-ratio))!important;  
+    height: calc( 6 * var(--aspect-ratio))!important;  
+}
+.frontss, .backss{
+   position: absolute;
+   right: 12px;
+}
+.back01 {
+    position: absolute;
+    left: calc( 1 * var(--aspect-ratio))!important;
+}
+.frontsss {
+    position: absolute;
+    left: calc( 0 * var(--aspect-ratio))!important;
+}
+.row1 .card00 {
     width: calc(8.5* var(--aspect-ratio));
     position: absolute;
     top: calc(6* var(--aspect-ratio));
-    left: calc(7.5* var(--aspect-ratio));
+    left: calc(9.5* var(--aspect-ratio));
+    display: flex;
+}
+.row1 .card01 {
+    width: calc(8.5* var(--aspect-ratio));
+    position: absolute;
+    top: calc(6* var(--aspect-ratio));
+    left: calc(13.5* var(--aspect-ratio));
     display: flex;
 }
 .insideamount button{
     border: none!important;
     background: none!important;
 }
-.row2 .card1{
-    width: calc(4* var(--aspect-ratio));
-    /* height: calc(7* var(--aspect-ratio)); */
-    /* position: absolute;
-    top: calc(6* var(--aspect-ratio));
-    left: calc(3* var(--aspect-ratio)); */
-}
+/* .row2 .card1 {
+	width: calc(4* var(--aspect-ratio));
+
+	left: calc(3* var(--aspect-ratio));
+} */
 .left_sidecard{
     position: relative;
     left: calc((1.1 * var(--aspect-ratio)));
     transform: rotate(-7deg);
     top: calc((.05 * var(--aspect-ratio)));
 }
+#dealer_cards{
+
+        position: absolute;
+        left: calc(-2.4* var(--aspect-ratio));
+        top: calc(1* var(--aspect-ratio));
+}
+#player_cards{
+    position: absolute;
+    left: calc(-2.4* var(--aspect-ratio));
+    top: calc(1* var(--aspect-ratio));
+}  
+
 .right_sidecard{
     z-index: 10000000;
 }
@@ -106,18 +139,26 @@
     position: relative;
     top: calc(11* var(--aspect-ratio));
 }
-.row2{
-    display: flex;
-    position: relative;
-    top: calc(15* var(--aspect-ratio));
-    justify-content: space-between;
-    padding: 0 calc(1.5* var(--aspect-ratio)) 0 calc(1.5* var(--aspect-ratio));
+.row2 {
+	display: flex;
+	position: relative;
+	top: calc(15* var(--aspect-ratio));
+	justify-content: space-between;
+	width: calc(21* var(--aspect-ratio));
+	left: calc(2* var(--aspect-ratio));
 }
-.row3 .card2 {
+.row3 .card00 {
     width: calc(8.5* var(--aspect-ratio));
     position: relative;
     top: calc(6* var(--aspect-ratio));
-    left: calc(7.5* var(--aspect-ratio));
+    left: calc(9.5* var(--aspect-ratio));
+    display: flex;
+}
+.row3 .card01 {
+    width: calc(8.5* var(--aspect-ratio));
+    position: relative;
+    top: calc(6* var(--aspect-ratio));
+    left: calc(13.5* var(--aspect-ratio));
     display: flex;
 }
 .row3 .coinsrow .coin1{
@@ -234,7 +275,7 @@ height: 100%;
     background: black;
     opacity: 0.5;
 }
-
+/* 
 .card2 div.with_mask {
     position: relative;
 }
@@ -248,4 +289,52 @@ height: 100%;
     top: 0;
     background: black;
     opacity: 0.5;
+} */
+
+@keyframes slideInDownss {
+    0% {
+        transform: translateY(-100%);
+        visibility: hidden;
+    }
+    30% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(0%) rotateY(-180deg);
+    }
+}
+
+.card11 {
+    animation-name: slideInDownss;
+    animation-duration: 0.5s; /* Updated duration to 0.5 seconds */
+    animation-fill-mode: both;
+    transition: transform 0.5s; /* Updated transition duration to 0.5 seconds */
+    transform-style: preserve-3d;
+    position: relative;
+    animation-delay: 0.9s;
+    margin-right: -0.5rem;
+
+}
+
+.card12 {
+    animation-name: slideInDownss;
+    animation-duration: 0.5s; /* Updated duration to 0.5 seconds */
+    animation-fill-mode: both;
+    transition: transform 0.5s; /* Updated transition duration to 0.5 seconds */
+    transform-style: preserve-3d;
+    position: relative;
+    animation-delay: 2.2s;
+    margin-right: -0.5rem;
+
+}
+.card13 {
+    animation-name: slideInDownss;
+    animation-duration: 0.5s; /* Updated duration to 0.5 seconds */
+    animation-fill-mode: both;
+    transition: transform 0.5s; /* Updated transition duration to 0.5 seconds */
+    transform-style: preserve-3d;
+    position: relative;
+    animation-delay: .3s;
+    margin-right: -0.5rem;
+
 }

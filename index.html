@@ -23,7 +23,6 @@
 </head>
 <!-- Button trigger modal -->
 <!-- Modal -->
-
 <div class="modal fade" id="modal-wining-payout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-wining-payoutLabel" aria-hidden="true">
     <div class="modal-dialog top-dialog">
         <div class="modal-content top-content " style="      width: calc((29 * var(--aspect-ratio)))!important;     height: calc((19 * var(--aspect-ratio)))!important;">
@@ -31,7 +30,7 @@
                 <button class="close_con"><i class="bi bi-x " data-bs-dismiss="modal" aria-label="Close "></i></button>
                 <div class="winner_trofie" style="background-image: url('images/imgpsh_fullsize_anim.png');   background-size: 100% 100%; ">
                     <div class="you_got">
-                        <p class="got">You got payout of</p>
+                        <p class="got">Winner!</p>
                         <p class="top_200">$200</p>
                     </div>
                 </div>
@@ -346,7 +345,7 @@
                                 </td>
                                 <td>
                                     <span class="tableSettingsSpan landscapeOnly">
-                                    <span class="smallBlind">10</span>/<span class="bigBlind">20</span>
+                                    <span class="smallBlind" style="display: inline-block;">10</span>/<span class="bigBlind" style="display: inline-block;">20</span>
                                     <span class="tournamentOnly">Ante <span class="ante">5</span> - level <span class="level">13</span></span>
                                     </span>
                                 </td>
@@ -895,6 +894,8 @@
             </div>
         </div>
     </div>
+    <div class="sidebet_cards">
+    </div>
     <div class="side-bet_div" style="display: none;">
         <!-- right slider start -->
 
@@ -912,13 +913,13 @@
                 <div class="fund_prent1 mb-1">
                     <div class="fund1_1 text-center">
                         <button id="button31_q31" class="div_fund1 ">
-                    <p class="Balance2" id="free-balance">$200</p>
+                    <p class="Balance2" id="free-balance">$0</p>
                     <p class="Balance">Free Balance</p>
                       
                 </button>
                         <div class="troffie" id="open_history"><img src="images/Frame 161.png" alt=""></div>
                         <button id="button32_q31" class="div_fund2">
-                    <p class="Balance2">$200</p>
+                    <p class="Balance2" id="total-paid">$0</p>
                     <p class="Balance">total paid</p>
                 </button>
                     </div>
@@ -932,9 +933,9 @@
                 <div class="gane_div_prents">
                     <div class="main_table_div">
                         <div class="game_01_icon">
-                            <i class="bi bi-question-circle game_01_q_icon " data-bs-toggle="modalss" data-bs-target="#modal-game"></i>
+                            <i class="bi bi-question-circle game_01_q_icon " data-bs-toggle="modalss"
+                                data-bs-target="#modal-game"></i>
                         </div>
-
                         <div class="table-board">
                             <div class="card_queen" style="z-index: 10">
                                 <img src="images/Frame.svg" alt="">
@@ -946,32 +947,29 @@
                                         <div class="card1">
                                             <img src="images/card(1).svg" alt="">
                                         </div>
-                                        <div class="card2" id="dealer_cards">
+                                        <div id="dealer_cards">
                                         </div>
                                         <div>
                                         </div>
                                     </div>
-                                    <div class="row2">
+                                    <div class="row2  ">
                                     </div>
                                     <div class="row3">
-                                        <div class="card2" id="player_cards">
+                                        <div id="player_cards">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="chooseamount d-flex justify-content-center">
                                     <div class="insideamount d-flex justify-content-between bet-chips">
                                         <button class="bigcoin1" id="buttonstart">
-                        <img src="images/Layer_1.svg" class="tarimg" alt="" value="1">
-                    </button>
+                                            <img src="images/Layer_1.svg" class="tarimg" alt="" value="1">
+                                        </button>
                                         <button class="bigcoin2" id="buttoncenter">
-                        <img src="images/Layer_1 (1).svg"  class="tarimg" alt="" value="2">
-                    </button>
+                                            <img src="images/Layer_1 (1).svg" class="tarimg" alt="" value="2">
+                                        </button>
                                         <button class="bigcoin3" id="buttonend">
-                        <img src="images/Layer_1 (2).svg" class="tarimg" alt="" value="4">
-                    </button>
-                                        <!-- <button class="bigcoin3" id="buttonends">
-                        <img src="images/Layer_1 (3).svg" class="tarimg" alt="" value="4">
-                    </button> -->
+                                            <img src="images/Layer_1 (2).svg" class="tarimg" alt="" value="4">
+                                        </button>
                                     </div>
                                     <div class="polygon">
                                         <img src="images/Polygon.svg" alt="">

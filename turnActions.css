@@ -16,7 +16,8 @@
     text-align: right;
     vertical-align: bottom;
     visibility: hidden;
-}
+} 
+
 
 #turnActionsDiv {
     /*  bottom: calc( -5 * var(--aspect-ratio)); */
@@ -62,13 +63,11 @@
     border-collapse: separate;
 }
 
-
 /* #betDiv td:nth-child(2) div:not(#lineUnderAllIn) {
     text-align: center;
     cursor: pointer;
     padding: calc( 2 * var(--aspect-ratio));
 } */
-
 #betDiv td:nth-child(2) div:not(#lineUnderAllIn) {
     text-align: center;
     cursor: pointer;
@@ -109,7 +108,6 @@
     left: calc( 11.5 * var(--aspect-ratio));
 }
 
-
 /* #betSlider {
     display: flex;
     justify-content: center;
@@ -133,6 +131,18 @@
     height: 100%;
     border-radius: calc(2.5 * var(--aspect-ratio));
     background: rgba(0, 2, 47, 0.72);
+}
+
+#bet33:hover {
+    background: #4464bb96 0% 0% no-repeat padding-box;
+    border-radius: calc( 1 * var(--aspect-ratio));
+    padding: calc( .4 * var(--aspect-ratio));
+}
+
+#bet70:hover {
+    background: #4464bb96 0% 0% no-repeat padding-box;
+    border-radius: calc( 1 * var(--aspect-ratio));
+    padding: calc( .4 * var(--aspect-ratio));
 }
 
 
@@ -208,17 +218,14 @@
     padding-right: calc( 0.6 * var(--aspect-ratio));
     border-right: 1.94px solid rgba(168, 168, 168, 1);
 }
-
 #betShow {
     position: absolute;
     left: calc( -0.3 * var(--aspect-ratio));
     top: calc( -4.8 * var(--aspect-ratio));
 }
-
-increase-placeholder {
+increase-placeholder{
     position: relative;
 }
-
 .amount_of_input {
     position: absolute;
     font-size: calc( 1.4 * var(--aspect-ratio));

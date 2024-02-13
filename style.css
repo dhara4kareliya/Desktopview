@@ -10,35 +10,32 @@
 @import "./sidebet.css";
 @import "./history.css";
 @import "./game01.css";
+
 :root {
     --aspect-ratio: 0.56vw;
 }
 
-.sideButtonsDiv {
+.sideButtonsDiv{
     width: 80%;
 }
-
-.multiTableButton {
+.multiTableButton{
     position: absolute;
     top: calc( 0 * var(--aspect-ratio));
     left: calc( 15 * var(--aspect-ratio));
     width: calc( 12 * var(--aspect-ratio))!important;
 }
-
-.all_left_buttons {
+ .all_left_buttons{
     width: 100%!important;
 }
 
 html {
     overflow: hidden;
 }
-
 .top_prent_div {
-    overflow: hidden;
+ overflow: hidden;
     width: calc(var(--aspect-ratio) * 1598);
 }
-
-.side-bet_div {
+.side-bet_div{
     width: calc(30* var(--aspect-ratio)) !important;
 }
 
@@ -67,12 +64,12 @@ body {
     padding: 1vw;
     overflow: overlay;
     /* Preventing marking elements and text */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
 }
 
 #backButton {
@@ -96,22 +93,18 @@ body {
     min-height: calc(3 * var(--aspect-ratio));
 }
 
-
 /* #totalPot,
 #winPot {
     position: absolute;
     top: calc(-13 * var(--aspect-ratio));
     left: 32vw;
 } */
-
 #totalPot,
 #winPot {
     position: absolute;
     top: calc(-10 * var(--aspect-ratio));
     left: 29vw;
 }
-
-
 /* #totalPot, #winPot {
     position: absolute;
     top: calc(-13 * var(--aspect-ratio));
@@ -136,29 +129,27 @@ body {
     pointer-events: none;
 }
 
-.waitingList {
+
+.waitingList{
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 4fr ;
     margin: 0px;
     width: 100%;
 }
-
-.waitingList button {
+.waitingList button{
     align-items: center;
     margin: 4px 0px;
 }
 
 .waitingList button:disabled {
-    background-color: grey;
+	background-color: grey;
 }
-
 
 /* .waitingList button{
     padding: 0px 21px;
     margin: 2px 0px;
 } */
-
-.waitingListSide {
+.waitingListSide{
     display: flex;
     margin: 0;
     padding: 0%;
@@ -166,22 +157,18 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .sitOutButton {
     position: absolute;
     top: calc( 2.4 * var(--aspect-ratio))!important;
     width: calc( 14 * var(--aspect-ratio))!important;
 }
-
-.btn-group {
+.btn-group{
     width: 100%;
 }
-
-#usersDropdown {
-    display: none;
+#usersDropdown{
+    display: none ;
 }
-
-.users {
+.users{
     background-color: #0E0B27;
     border: 1px solid yellow;
     border-radius: 7px;
@@ -191,15 +178,12 @@ body {
     display: flex;
     flex-direction: column;
     margin-top: 1px;
-    height: 130px;
+    height:130px;
 }
-
-.innerUser {
+.innerUser{
     text-align: center;
     margin: 2px 0px;
 }
-
-
 /*
 @media (min-aspect-ratio: 1/1) {
     .portrateOnly {
@@ -246,23 +230,18 @@ input {
     color: inherit;
 }
 
-
 /* Hide the arrows on the input */
 
-
 /* Chrome, Safari, Edge, Opera */
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-
 /* Firefox */
-
 input[type=number] {
-    -moz-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 
@@ -272,7 +251,9 @@ input[type=number] {
     --aspect-ratio: 0.56vw;
     /* --pos: calc(1598 / (100vw / 100 * 32) / 1920);
     --aspects-ratio: calc(1598px / 1920px); */
+
 }
+
 
 .modal-dialog {
     max-width: 340px;
@@ -326,13 +307,12 @@ input[type=number] {
     box-shadow: 0px 2px 5px #FFFFFF45;
     font-size: medium;
 }
-
-
 /* currency */
 
 .imageFeatures,
 .imageFeatures1 {
     display: inline-block;
+    
 }
 
 .text_div {
@@ -372,13 +352,11 @@ input[type=number] {
     margin-top: -3px;
     padding-top: 0;
 }
-
-.player_wrapper .money .imageFeatures1 img {
+.player_wrapper .money .imageFeatures1 img{
     margin: -1px !important;
     padding-top: 0px !important;
 }
-
-#insuranceModal .imageFeatures img {
+#insuranceModal .imageFeatures img{
     width: calc((3 * var(--aspect-ratio)));
 }
 
@@ -436,7 +414,8 @@ input[type=number] {
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    margin-top: calc( -2 * var(--aspect-ratio)) !important;
+    margin-top: calc( -2 * var(--aspect-ratio)) !important; 
+
 }
 
 .border-p-text {
@@ -487,6 +466,7 @@ input[type=number] {
     -webkit-background-clip: text;
     /* / For Safari / */
     color: transparent;
+
 }
 
 .sane {
@@ -515,7 +495,7 @@ input[type=number] {
 .text_btn {
     width: calc(60 * var(--aspect-ratio)) !important;
     height: calc(8 * var(--aspect-ratio)) !important;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat" ,sans-serif;
     font-size: calc(3.5 * var(--aspect-ratio));
     font-weight: 600;
     color: #FFFFFF;
@@ -531,7 +511,7 @@ input[type=number] {
     /* / padding: calc(.9  var(--aspect-ratio)) calc(7.5  var(--aspect-ratio)); / */
     border-radius: calc(2 * var(--aspect-ratio));
     background: linear-gradient(0deg, #3D3A3A, #3D3A3A), linear-gradient(180deg, #646363 0%, #3D3A3A 95.83%);
-    font-family: "Montserrat", sans-serif;
+    font-family: "Montserrat" ,sans-serif;
     font-size: calc(3* var(--aspect-ratio));
     font-weight: 600;
     color: #FFFFFF;

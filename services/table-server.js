@@ -381,6 +381,10 @@ function onCashWaitList(res) {
     triggerEventListeners("onCashWaitList", res);
 }
 
+function onWaitForBB(res) {
+    triggerEventListeners("onWaitForBB", res);
+}
+
 function onLog(res) {
     triggerEventListeners("onLog", res);
 }
@@ -465,6 +469,7 @@ subscribe("onInsurance", onInsurance);
 subscribe("onAnimation", onAnimation);
 subscribe("onTourneyInfo", onTourneyInfo);
 subscribe("onCashWaitList", onCashWaitList);
+subscribe("onWaitForBB", onWaitForBB);
 subscribe("onLog", onLog);
 subscribe("onChat", onChat);
 subscribe("onTip", onTip);

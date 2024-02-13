@@ -101,7 +101,8 @@ function onPlayerLeave(res) {
 
     if (res.type === 'tournament_leave') {
         mainUI.showTournamentResult(res.hasWin, res.prize, res.rank);
-    } else if (res.type === 'double_browser_leave') {
+    } 
+    else if (res.type === 'double_browser_leave') {
         mainUI.showDoubleLoginMsg(res.msg);
     }
 }
@@ -121,7 +122,7 @@ function onTableSettings(settings) {
     actionUI.setUsdRate(usdRate);
     table.setBigBlind(settings.bigBlind);
     table.setUsdRate(usdRate);
-    table.setCloseTable(settings.closeTable);
+    table.setCloseTable(settings.closeTable);    
     table.setNumberOfSeats(settings.numberOfSeats);
 
     if (settings.mode == "tournament") {
@@ -158,7 +159,7 @@ function onPlayerState(state) {
     actionUI.showActionUI(false);
     mainUI.showSitIn(state == "SitOut");
     mainUI.showFoldToAnyBetCheckbox(state == "Playing");
-    sidebetUI.showGame01Panel(state == "Waiting" || state == "SitOut");
+    sidebetUI.toggleSideBetAndGame(state == "Waiting" || state == "SitOut");
 
     if (tableSettings.mode == "cash") {
 
@@ -170,7 +171,8 @@ function onPlayerState(state) {
         sidebetUI.showPanel(state == "Waiting" || state == "Playing" || state == "SitOut");
         mainUI.showTipDealer(state == "Playing");
 
-        if (getPlayerSeat() >= 0 && (state == "Playing" || state == "Waiting") && buyInUI.visible) {} else if (getPlayerSeat() >= 0 && state == "Joining") {
+        if (getPlayerSeat() >= 0 && (state == "Playing" || state == "Waiting") && buyInUI.visible) { } 
+        else if (getPlayerSeat() >= 0 && state == "Joining") {
             showBuyIn();
         } else {
             hideBuyIn();
@@ -186,6 +188,9 @@ function onPlayerState(state) {
         //     actionUi.setShowDollarSign(false);
         //     tableUi.setShowDollarSign(false);
         sidebetUI.showPanel(true);
+        mainUI.showTipDealer(false);
+        // $(".side-bet_div").hide();
+        $(".side-bet_div").style.visibility = "hidden";
     }
 }
 
@@ -226,8 +231,9 @@ function onTableStatus(status) {
     }
 
     if (tableSettings.mode == "cash" && mainPlayerSeat >= 0) {
-        if (status.seats[mainPlayerSeat].lastAction === 'fold' || status.seats[mainPlayerSeat].state === 'SitOut')
+        if (status.seats[mainPlayerSeat].lastAction === 'fold' || status.seats[mainPlayerSeat].state === 'SitOut') {
             mainUI.showAddChips(true);
+        }
         else if (!buyInUI.visible) {
             mainUI.showAddChips(false);
         } else if (status.seats[mainPlayerSeat].state == 'Playing') {
@@ -236,9 +242,12 @@ function onTableStatus(status) {
 
         if (status.seats[mainPlayerSeat].state === 'SitOut') {
             mainUI.showSitOut(false);
-        } else {
+        }
+        else {
             mainUI.showSitOut(true);
         }
+
+        sidebetUI.setFoldStatusAndSideGamePanel(status.seats[mainPlayerSeat].lastAction === 'fold');
     } else {
         mainUI.showAddChips(false);
         mainUI.showSitOut(false);
@@ -430,6 +439,10 @@ function onCashWaitList(res) {
     mainUI.setWaitList(res);
 }
 
+function onWaitForBB(res) {
+    mainUI.setWaitForBB(res);
+}
+
 function onLog(res) {
     mainUI.addLog(res);
 }
@@ -464,6 +477,7 @@ tableSubscribe("onMessage", onMessage);
 tableSubscribe("onInsurance", onInsurance);
 tableSubscribe("onTourneyInfo", onTourneyInfo);
 tableSubscribe("onCashWaitList", onCashWaitList);
+tableSubscribe("onWaitForBB", onWaitForBB);
 tableSubscribe("onSideBet", onSideBet);
 tableSubscribe("onSideBetHistory", onSideBetHistory);
 tableSubscribe("onTableFreeBalance", onTableFreeBalance);

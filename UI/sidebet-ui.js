@@ -15,12 +15,14 @@ const sidebetGame01Chips = $(".bet-chips button");
 const sideberGameSubmitBtn = $(".hitme")[0];
 const streetLabel = $(".text-street")[0];
 const sidebetPanel = $(".side-bet_div")[0];
-
+const sidebetMaxCount = 7;
 const gameModes = Object.freeze({
     None: 0,
     Game01: 1,
     Game02: 2,
 });
+
+let totalWinningAmount = 0;
 
 export class SidebetUI {
     constructor(mainUI) {
@@ -33,10 +35,18 @@ export class SidebetUI {
         this.gameBetBBRatio = 0;
         this.isGame01Visible = false;
         this.currentGameMode = gameModes.None;
+        this.isSidebetSubmited = false;
+        this.isPlayerFold = false;
+        this.gameBetSizes = new Map();
         this.init();
     }
 
     init() {
+        updateTotalPaid(0);
+        // this.updateFreeBalance(0);
+        this.gameBetSizes.set(gameModes.Game01, [1, 2, 4]);
+        this.gameBetSizes.set(gameModes.Game02, [2, 4, 8]);
+
         sidebetStreetDiv.addEventListener('click', () => {
             if (this.isGame01Visible) {
                 this.toggleSidebetGame();
@@ -52,15 +62,26 @@ export class SidebetUI {
         });
 
         submitButton.addEventListener('click', () => {
+            if (this.isSidebetSubmited) return;
+
             let sidebets = [];
+            let count = 0;
             const elements = $('.btun');
             for (const button of elements) {
+                if (count >= sidebetMaxCount) break;
+
                 if (button.classList.contains('selected')) {
+                    const parentNode = button.parentNode.parentNode.parentNode;
+                    const betName = $(parentNode).find(".bet-name")[0].innerText;
+                    const payout = $(parentNode).find("#payout")[0].innerText;
+                    this.addSidebetCard(betName, payout);
                     sidebets.push(button.id);
+                    count++;
                 }
             }
             submitSideBet(sidebets, this.sidebetStreet);
             this.initSideBetPanel();
+            this.isSidebetSubmited = true;
         });
 
         for (const chip of sidebetGame01Chips) {
@@ -88,6 +109,12 @@ export class SidebetUI {
 
                 // Set the new center button id for the next click
                 this.centerButtonId = clickedButtonId;
+
+                const betSizes = [];
+                for (let i = 1; i <= 3; ++i) {
+                    betSizes.push($(`.bigcoin${i} img`)[0].getAttribute('value'));
+                }
+                this.gameBetSizes.set(this.currentGameMode, betSizes);
             });
         }
 
@@ -105,31 +132,85 @@ export class SidebetUI {
         });
     }
 
+    addSidebetCard(betName, payout) {
+        const element = `
+            <div class="sidebet_card pending">
+                <h1 class="Hitting_panel">${betName}</h1>
+                <div class="win_top">
+                    <div>
+                        <button class="pay_buttons">Payout: <span class="span_y">${payout}</span></button>
+                    </div>
+                    <h1 class="win"></h1>
+                </div>
+            </div>
+        `
+        $('.sidebet_cards').append(element);
+    }
+
+    removeAllSidebetCards() {
+        $('.sidebet_cards').remove();
+    }
+
+    showSidebetCardsResult(result) {
+        const cards = $('.sidebet_card');
+
+        if (result.length > 0)
+        for (const list of result) {
+            const element = $(`.sidebet_card:contains(${list.betName}):first`);
+            $(element).find('.win')[0].innerText = 'Win !';
+            element[0].classList.remove("pending");
+            element[0].classList.add("winning");
+        }
+
+        for (const card of cards) {
+            if (!card.classList.contains('winning')) {
+                $(card).find('.win')[0].innerText = 'Loose !';
+                card.classList.remove("pending");
+                card.classList.add('losing');
+            }
+        }
+    }
+
+    setFoldStatusAndSideGamePanel(value) {
+        if (this.isPlayerFold == value) return;
+        
+        this.isPlayerFold = value;
+        if (this.isPlayerFold) {
+            this.toggleSideBetAndGame(true);
+        }
+    }
+
+    showGamePanel(mode) {
+        if (mode == gameModes.Game02) {
+            sideberGameSubmitBtn.innerText = 'DEAL ME';
+            streetLabel.innerText = "New Deal";
+        }
+        else if (mode == gameModes.Game01) {
+            sideberGameSubmitBtn.innerText = 'HIT ME';
+            streetLabel.innerText = "Hit The Dealer";
+        }
+        else if (mode == gameModes.None) {
+            return;
+        }
+
+        const betSizes = this.gameBetSizes.get(this.currentGameMode);
+        this.gameBetBBRatio = Number(betSizes[1]);
+
+        for (let i = 0; i < 3; ++i) {
+            $(`.bigcoin${i + 1} img`)[0].setAttribute('src', `images/sidebet_chip_${betSizes[i]}bb.svg`);
+            $(`.bigcoin${i + 1} img`)[0].setAttribute('value', betSizes[i]);
+        }
+    }
+
     toggleSidebetGame() {
         if (this.currentGameMode == gameModes.Game01) {
-            sideberGameSubmitBtn.innerText = 'DEAL ME';
             this.currentGameMode = gameModes.Game02;
-            streetLabel.innerText = "New Deal";
-            this.gameBetBBRatio = 4;
-            $('.bigcoin1 img')[0].setAttribute('src', 'images/sidebet_chip_2bb.svg');
-            $('.bigcoin2 img')[0].setAttribute('src', 'images/sidebet_chip_4bb.svg');
-            $('.bigcoin3 img')[0].setAttribute('src', 'images/sidebet_chip_8bb.svg');
-            $('.bigcoin1 img')[0].setAttribute('value', '2');
-            $('.bigcoin2 img')[0].setAttribute('value', '4');
-            $('.bigcoin3 img')[0].setAttribute('value', '8');
         }
         else {
-            sideberGameSubmitBtn.innerText = 'HIT ME';
             this.currentGameMode = gameModes.Game01;
-            streetLabel.innerText = "Hit The Dealer";
-            this.gameBetBBRatio = 2;
-            $('.bigcoin1 img')[0].setAttribute('src', 'images/sidebet_chip_1bb.svg');
-            $('.bigcoin2 img')[0].setAttribute('src', 'images/sidebet_chip_2bb.svg');
-            $('.bigcoin3 img')[0].setAttribute('src', 'images/sidebet_chip_4bb.svg');
-            $('.bigcoin1 img')[0].setAttribute('value', '1');
-            $('.bigcoin2 img')[0].setAttribute('value', '2');
-            $('.bigcoin3 img')[0].setAttribute('value', '4');
         }
+
+        this.showGamePanel(this.currentGameMode);
     }
     
     initSideBetPanel() {
@@ -158,7 +239,10 @@ export class SidebetUI {
         $(".scroll_prents").find('.fund_prent').remove();
         $('#submit-sidebet').find('#total-amount')[0].innerText = '0';
         $('#total-payout')[0].innerText = '0';
-        streetLabel.innerText = this.isGame01Visible ? "Hit the dealer" : streetsOnSideBet.get(streetText) || "Street";
+
+        if (!this.isGame01Visible) {
+            streetLabel.innerText = streetsOnSideBet.get(streetText) || "Street";
+        }
 
         if (!street) return;
 
@@ -180,13 +264,13 @@ export class SidebetUI {
                                 </div>
                                 <div class="main_right">
                                     <div class="">
+                                        <button id="${option.betName}-${this.mainUI.tableInfo.bigBlind * 2}" class="p-bule btun"><span class="btau_text">${(getMoneyText(this.mainUI.tableInfo.bigBlind * 2)).outerHTML}</span></button>
+                                    </div>
+                                    <div class="">
+                                        <button id="${option.betName}-${this.mainUI.tableInfo.bigBlind * 5}" class="p-bule btun"><span class="btau_text">${(getMoneyText(this.mainUI.tableInfo.bigBlind * 5)).outerHTML}</span></button>
+                                    </div>
+                                    <div class="">
                                         <button id="${option.betName}-${this.mainUI.tableInfo.bigBlind * 10}" class="p-bule btun"><span class="btau_text">${(getMoneyText(this.mainUI.tableInfo.bigBlind * 10)).outerHTML}</span></button>
-                                    </div>
-                                    <div class="">
-                                        <button id="${option.betName}-${this.mainUI.tableInfo.bigBlind * 20}" class="p-bule btun"><span class="btau_text">${(getMoneyText(this.mainUI.tableInfo.bigBlind * 20)).outerHTML}</span></button>
-                                    </div>
-                                    <div class="">
-                                        <button id="${option.betName}-${this.mainUI.tableInfo.bigBlind * 50}" class="p-bule btun"><span class="btau_text">${(getMoneyText(this.mainUI.tableInfo.bigBlind * 50)).outerHTML}</span></button>
                                     </div>
                                 </div>
                             </div>
@@ -204,6 +288,8 @@ export class SidebetUI {
         const elements = $('.btun');
         for (const button of elements) {
             button.addEventListener('click', (e) => {
+                if (this.isSidebetSubmited) return;
+
                 const parentNode = e.currentTarget.parentNode.parentNode.parentNode;
                 const ratio = Number($(parentNode).find(".bet-ratio")[0].innerText.split(':')[1]);
                 const totalAmountNode = $('#submit-sidebet').find('#total-amount')[0];
@@ -256,7 +342,16 @@ export class SidebetUI {
     }
 
     updateSideBetHistory(res) {
+        setTimeout(() => {
+            this.showSidebetCardsResult(res.historyLists);    
+        }, 3000);
+        setTimeout(() => {
+            this.removeAllSidebetCards();
+        }, 5000);
+        
+
         if (Number(res.totalReward) > 0) {
+            updateTotalPaid(Number(res.totalReward));
             const totalRewardText = getMoneyText(res.totalReward);
             $('.top_200')[0].innerHTML = totalRewardText.outerHTML;
             setTimeout(() => {
@@ -268,9 +363,12 @@ export class SidebetUI {
             }, 5000);
         }
 
+        this.isSidebetSubmited = false;
         console.log('Winning History', res.historyLists);
         let total = 0;
         let div = '';
+        
+        if (res.historyLists.length > 0)
         for (const list of res.historyLists) {
             total = total + list.award;
             let day = new Date(list.timestamp).getDay();
@@ -306,10 +404,10 @@ export class SidebetUI {
         const tableCards = data.tableCards;
         for (let i = 0; i < tableCards.length; ++i) {
             const cardFilePath = getCardImageFilePath(tableCards[i]);
-
-            const tableCard = `<div class="card1" value=${tableCards[i].toLowerCase()}>
-                                <img src="${cardFilePath}"/>
-                               </div>`;
+            const tableCard = `<div class="card1 card11" value=${tableCards[i].toLowerCase()}>
+                                    <img class="front fronts" src="${cardFilePath}"/>
+                                    <img class="back backs" src="./images/png/102x142/back.png" class="h-100 w-100"/>
+                                </div>`;
 
             $('.row2').append(tableCard);
         }
@@ -317,9 +415,13 @@ export class SidebetUI {
         const dealerCards = data.dealerCards;
         for (let i = 0; i < dealerCards.length; ++i) {
             const cardFilePath = getCardImageFilePath(dealerCards[i]);
-
-            const dealerCard = `<div value=${dealerCards[i].toLowerCase()} ${classes[i] == 'right_sidecard' ? 'style="z-index: 1;"' : 0}>
-                                    <img src="${cardFilePath}" class="${classes[i]}" />
+            const dealerCard = `<div class="card0${i} card12" value=${dealerCards[i].toLowerCase()} ${classes[i] == 'right_sidecard' ? 'style="z-index: 1;"' : 0}>
+                                    <div class="back backs backss">
+                                        <img src="./images/png/102x142/back.png" alt="" class="h-100 w-100">
+                                    </div>  
+                                    <div class="front fronts frontss">
+                                        <img src="${cardFilePath}" alt="">
+                                    </div>
                                 </div>`;
 
             $('#dealer_cards').append(dealerCard);
@@ -328,27 +430,33 @@ export class SidebetUI {
         const playerCards = data.playerCards;
         for (let i = 0; i < playerCards.length; ++i) {
             const cardFilePath = getCardImageFilePath(playerCards[i]);
-
-            const playerCard = `<div value=${playerCards[i].toLowerCase()} ${classes[i] == 'right_sidecard' ? 'style="z-index: 1;"' : 0}>
-                                    <img src="${cardFilePath}" class="${classes[i]}" />
+            const playerCard = `<div class="card0${i} card13" value=${playerCards[i].toLowerCase()}>    
+                                    <div class="back backs backss">
+                                        <img src="./images/png/102x142/back.png" alt="" class="h-100 w-100">
+                                    </div>
+                                    <div class="front fronts frontss">
+                                        <img src="${cardFilePath}" alt="">
+                                    </div>
                                 </div>`;
+                                
 
             $('#player_cards').append(playerCard);
         }
 
         setTimeout(() => {
             highlightGame01TableCards(data.winnersHand[0].cards);
-            highlightGame01PlayerCards($('#dealer_cards div'), data.winnersHand[0].cards);
-            highlightGame01PlayerCards($('#player_cards div'), data.winnersHand[0].cards);
+            highlightGame01PlayerCards($('#dealer_cards > div'), data.winnersHand[0].cards);
+            highlightGame01PlayerCards($('#player_cards > div'), data.winnersHand[0].cards);
         }, 1000);
 
         setTimeout(() => {
             highlightGame01TableCards();
-            highlightGame01PlayerCards($('#dealer_cards div'));
-            highlightGame01PlayerCards($('#player_cards div'));
+            highlightGame01PlayerCards($('#dealer_cards > div'));
+            highlightGame01PlayerCards($('#player_cards > div'));
         }, 2000);
         
         if (data.winningRatioBB > 0) {
+            updateTotalPaid(Number(data.winningRatioBB) * tableSettings.bigBlind);
             $('.top_200')[0].innerHTML = `${data.winningRatioBB}BB`;
             setTimeout(() => {
                 $('#modal-wining-payout').modal('show');
@@ -360,13 +468,15 @@ export class SidebetUI {
         }
 
         setTimeout(() => {
-            $('.row2 .card1').remove();
+            $('.row2 .card11').remove();
             $('#dealer_cards div').remove();
             $('#player_cards div').remove();
         }, 4000);
     }
 
-    showGame01Panel(value) {
+    toggleSideBetAndGame(value) {
+        if (this.isGame01Visible && value) return;
+
         this.isGame01Visible = value;
         const game01Div = $('.gane_div_prents')[0];
         if (!value) {
@@ -377,8 +487,7 @@ export class SidebetUI {
         else {
             game01Div.style.display = '';
             $('.text_div')[0].classList.add('d-none');
-            this.currentGameMode = gameModes.Game02;
-            this.toggleSidebetGame();
+            this.showGamePanel(this.currentGameMode);
         }
     }
 
@@ -386,10 +495,10 @@ export class SidebetUI {
         const tableCards = data.tableCards;
         for (let i = 0; i < tableCards.length; ++i) {
             const cardFilePath = getCardImageFilePath(tableCards[i]);
-
-            const tableCard = `<div class="card1" value=${tableCards[i].toLowerCase()}>
-                                <img src="${cardFilePath}"/>
-                               </div>`;
+            const tableCard = `<div class="card11 card1" value=${tableCards[i].toLowerCase()} style="animation-name:${tableCards[i].toLowerCase() == '?' ? "slide-animation" : "slideInDownss"}">
+                                    <img class="back backs" src="./images/png/102x142/back.png" class="h-100 w-100"/>
+                                    <img class="front fronts" src="${cardFilePath}"/>
+                                </div>`;
 
             $('.row2').append(tableCard);
         }
@@ -398,9 +507,13 @@ export class SidebetUI {
         const playerCards = data.playerCards;
         for (let i = 0; i < playerCards.length; ++i) {
             const cardFilePath = getCardImageFilePath(playerCards[i]);
-
-            const playerCard = `<div value=${playerCards[i].toLowerCase()} ${classes[i] == 'right_sidecard' ? 'style="z-index: 1;"' : 0}>
-                                    <img src="${cardFilePath}" class="${classes[i]}" />
+            const playerCard = `<div class="card0${i} card03" value=${playerCards[i].toLowerCase()}>    
+                                    <div class="back backs backss">
+                                        <img src="./images/png/102x142/back.png" alt="" class="h-100 w-100">
+                                    </div>
+                                    <div class="front fronts frontss">
+                                        <img src="${cardFilePath}" alt="">
+                                    </div>
                                 </div>`;
 
             $('#player_cards').append(playerCard);
@@ -408,18 +521,19 @@ export class SidebetUI {
 
         setTimeout(() => {
             highlightGame01TableCards(data.winnersHand[0].cards);
-            highlightGame01PlayerCards($('#player_cards div'), data.winnersHand[0].cards);
+            highlightGame01PlayerCards($('#player_cards > div'), data.winnersHand[0].cards);
         }, 1000);
 
         setTimeout(() => {
             highlightGame01TableCards();
-            highlightGame01PlayerCards($('#player_cards div'));
+            highlightGame01PlayerCards($('#player_cards > div'));
         }, 2000);
         
         if (data.winningRatioBB > 0) {
             $('.top_200')[0].innerHTML = `${data.winningRatioBB}BB`;
             setTimeout(() => {
                 $('#modal-wining-payout').modal('show');
+                updateTotalPaid(Number(data.winningRatioBB) * tableSettings.bigBlind);
             }, 2000);
 
             setTimeout(() => {
@@ -428,7 +542,7 @@ export class SidebetUI {
         }
 
         setTimeout(() => {
-            $('.row2 .card1').remove();
+            $('.row2 .card11').remove();
             $('#player_cards div').remove();
         }, 4000);
     }
@@ -439,7 +553,7 @@ export class SidebetUI {
 }
 
 function highlightGame01TableCards(cards) {
-    const tableCards = $(".row2 .card1");
+    const tableCards = $(".row2 .card11");
 
     if (!cards) {
         for (const card of tableCards) {
@@ -470,4 +584,10 @@ function highlightGame01PlayerCards(cards, winnerCards) {
             card.classList.add("with_mask")
         }
     }
+}
+
+function updateTotalPaid(amount) {
+    totalWinningAmount = totalWinningAmount + amount;
+    const amountText = getMoneyText(totalWinningAmount);
+    $('#total-paid')[0].innerHTML = amountText.outerHTML;
 }

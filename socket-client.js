@@ -36,6 +36,7 @@ function setSocketEventListeners() {
     socket.on("REQ_Animation", eventTrigger("onAnimation"));
     socket.on("REQ_TOURNEY_INFO", eventTrigger("onTourneyInfo"));
     socket.on("REQ_TABLE_WAITLIST", eventTrigger("onCashWaitList"));
+    socket.on("REQ_TABLE_WAITFORBB", eventTrigger("onWaitForBB"));
     socket.on("REQ_TABLE_LOG", eventTrigger("onLog"));
     socket.on("REQ_TABLE_CHAT", eventTrigger("onChat"));
     socket.on("REQ_SIDEBET_OPTIONS", eventTrigger("onSideBetOptions"));
@@ -67,6 +68,7 @@ const eventListeners = {
     onAnimation: [],
     onTourneyInfo: [],
     onCashWaitList: [],
+    onWaitForBB: [],
     onLog: [],
     onChat: [],
     onTip: [],
